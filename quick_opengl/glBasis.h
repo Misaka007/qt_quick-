@@ -16,8 +16,9 @@
 #include <GL/glu.h>
 #include <QtGui/QMatrix4x4>
 #include <math.h>
-class glBasis : protected QOpenGLFunctions
+class glBasis : public QObject,protected QOpenGLFunctions
 {
+Q_OBJECT
 public:
     struct  Camera{
         QVector3D eye = QVector3D(0, 20, 10);
@@ -65,10 +66,10 @@ public:
 public:
     virtual void initializeGL();
     virtual void initializeShader();
-
+public slots:
     virtual void resizeGL(int w, int h);
     virtual void paintGL();
-
+public:
     void mousePressEvent(QMouseEvent *event) ;
     void mouseMoveEvent(QMouseEvent *event) ;
     void wheelEvent(QWheelEvent *event) ;

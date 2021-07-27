@@ -10,6 +10,7 @@ OpenGLItem::OpenGLItem()
     setAcceptedMouseButtons(Qt::AllButtons);
     setFlag(ItemAcceptsInputMethod, true);
 
+//    window()->setBaseSize(QSize(400,300));
     connect(this, &QQuickItem::windowChanged, this, [this](QQuickWindow *window)
     {
         if (window)
@@ -36,25 +37,25 @@ void OpenGLItem::sync()
     {
         m_glBasis = new glBasis();
         m_glBasis->initializeGL();
-        m_glBasis->resizeGL(window()->width(), window()->height());
+        m_glBasis->resizeGL(window()->width()/2, window()->height()/2);
         connect(window(), &QQuickWindow::beforeRendering, this, [this]()
         {
-            //window()->resetOpenGLState();
+            window()->beginExternalCommands();
+            window()->resetOpenGLState();
             m_glBasis->paintGL();
+            window()->endExternalCommands();
         }, Qt::DirectConnection);
-
         connect(window(), &QQuickWindow::afterRendering, this, [this]()
         {
             //渲染后调用，计算fps
         }, Qt::DirectConnection);
         connect(window(), &QQuickWindow::widthChanged, this, [this]()
         {
-            m_glBasis->resizeGL(window()->width(), window()->height());
+            m_glBasis->resizeGL(window()->width()/2, window()->height()/2);
         });
-
         connect(window(), &QQuickWindow::heightChanged, this, [this]()
         {
-            m_glBasis->resizeGL(window()->width(), window()->height());
+            m_glBasis->resizeGL(window()->width()/2, window()->height()/2);
         });
     }
 }
@@ -81,6 +82,8 @@ void OpenGLItem::mouseReleaseEvent(QMouseEvent *event) {
 
 void OpenGLItem::mousePressEvent(QMouseEvent *event) {
     m_glBasis->mousePressEvent(event);
+
+
     QQuickItem::mousePressEvent(event);
     event->accept();
 }

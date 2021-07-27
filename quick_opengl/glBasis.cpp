@@ -1,3 +1,4 @@
+#include <iostream>
 #include "glBasis.h"
 
 void glBasis::initializeGL()
@@ -6,18 +7,7 @@ void glBasis::initializeGL()
 //    初始化着色器
     initializeShader();
 
-    //    启用smoothshading(阴影平滑)
-    glShadeModel(GL_SMOOTH);
-//    设置清除屏幕时所用的颜色
-    glClearColor(255.0,255.0,255.0,0.0);
-//    设置深度缓存
-    glClearDepth(1.0);
-//    启用深度测试。
-    glEnable(GL_DEPTH_TEST);
-//    所作深度测试的类型
-    glDepthFunc(GL_LEQUAL);
-//    透视修正
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
+//
 }
 
 //初始化着色器
@@ -34,7 +24,14 @@ void glBasis::resizeGL(int w, int h)
 
 void glBasis::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.2, 0.3, 0.3, 1.0);
+    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_BLEND);
+//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+//    glClear(GL_COLOR_BUFFER_BIT);
+
     glLoadIdentity();
 //    选择投影矩阵。
     glMatrixMode(GL_PROJECTION);
@@ -47,6 +44,7 @@ void glBasis::paintGL()
               camera.up.x(),camera.up.y(),camera.up.z()
     );
 
+    glDrawElements(GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, 0);
     glBegin(GL_LINES); // 画线 ======
     glColor3f(0.5,0.5,0.5); //gray  灰色线条
     float a =0.5;
@@ -61,7 +59,9 @@ void glBasis::paintGL()
        glVertex3f( size*a, -0.3, i*a);
        glVertex3f(-size*a, -0.3, i*a);
     }
+    glDisable(GL_DEPTH_TEST);
     glEnd();
+
 }
 
 void glBasis::mousePressEvent(QMouseEvent *event)
