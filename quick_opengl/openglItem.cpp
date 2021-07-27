@@ -45,10 +45,6 @@ void OpenGLItem::sync()
             m_glBasis->paintGL();
             window()->endExternalCommands();
         }, Qt::DirectConnection);
-        connect(window(), &QQuickWindow::afterRendering, this, [this]()
-        {
-            //渲染后调用，计算fps
-        }, Qt::DirectConnection);
         connect(window(), &QQuickWindow::widthChanged, this, [this]()
         {
             m_glBasis->resizeGL(window()->width()/2, window()->height()/2);
